@@ -143,7 +143,7 @@ spec:
   - port: 9080
     name: http
   selector:
-    app: reviews # ラベルがapp:reviewsのPodにトラフィックを転送
+    app: reviews # ラベルがapp:reviewsのPod(v1~v3)にトラフィックを転送
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -279,17 +279,22 @@ spec:
 # Productpage services
 ##################################################################################################
 apiVersion: v1
-kind: Service
+kind: Service #L4LB
 metadata:
   name: productpage
   labels:
+  # あるアプリケーションが複数のマイクロサービスから構成されている場合、
+  # 各サービス（Service, Deployment, Pod など）に app ラベルを設定することで、
+  # すべてが同じアプリケーションの一部であることを明示できる
     app: productpage
+  # service ラベルは、そのリソースがどのサービスに属しているかを示すために使う
     service: productpage
 spec:
   ports:
   - port: 9080
     name: http
   selector:
+    # Serviceにより、このラベルが一致するPodにトラフィックを転送
     app: productpage
 ---
 apiVersion: v1

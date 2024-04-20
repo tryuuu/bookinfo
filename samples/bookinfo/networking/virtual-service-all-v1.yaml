@@ -4,12 +4,15 @@ metadata:
   name: productpage
 spec:
   hosts:
-  - productpage
+  # L4LB(k8s/service)でトラフィックを受け取り、istio/virtualserviceでトラフィックを振り分ける。組み合わせることでL7LBを実現。
+  # ここで記述されるhostsに対するリクエストをvirtualserviceが処理する
+  # 受信先のservice名(L4LB)
+  - productpage # bookinfo.ymlのmetadata.name(productpageのservice)と対応
   http:
   - route:
     - destination:
-        host: productpage
-        subset: v1
+        host: productpage # 転送先のservice名
+        subset: v1 # サービス内の特定のサブセット(productpageはv1Podのみ)
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -22,7 +25,7 @@ spec:
   - route:
     - destination:
         host: reviews
-        subset: v1
+        subset: v1 # v1からv3まであるが、全てv1にトラフィックを送る
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
