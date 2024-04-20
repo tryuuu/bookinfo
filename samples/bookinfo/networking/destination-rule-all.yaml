@@ -1,21 +1,25 @@
+# サブセットを定義しistioの機能を実現させる
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: productpage
+# productpageのDestinationRuleを定義、v1のみにトラフィックを送る(bookinfo.ymlを見たらわかるがv1しかない)
 spec:
-  host: productpage
+  host: productpage # bookinfo.ymlのmetadata.name(productpage)と対応
   subsets:
-  - name: v1
+  - name: v1 # サブセットを定義
     labels:
-      version: v1
+    # bookinfo.ymlのproductpageサービスで定義したv1Podのラベルを指定
+      version: v1 
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: reviews
 spec:
-  host: reviews
+  host: reviews # bookinfo.ymlのmetadata.name(reviews)と対応
   subsets:
+  # v1-v3までのサブセットを定義しbookinfo.ymlのreviewsサービスで定義したPodのラベルを指定
   - name: v1
     labels:
       version: v1
