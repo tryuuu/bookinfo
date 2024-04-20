@@ -132,18 +132,18 @@ spec:
 # Reviews service
 ##################################################################################################
 apiVersion: v1
-kind: Service
+kind: Service # L4LB
 metadata:
   name: reviews
   labels:
-    app: reviews
+    app: reviews 
     service: reviews
 spec:
   ports:
   - port: 9080
     name: http
   selector:
-    app: reviews
+    app: reviews # ラベルがapp:reviewsのPodにトラフィックを転送
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -152,6 +152,7 @@ metadata:
   labels:
     account: reviews
 ---
+# v1のPodを1つデプロイ
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -192,6 +193,7 @@ spec:
       - name: tmp
         emptyDir: {}
 ---
+# v2のPodを1つデプロイ
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -232,6 +234,7 @@ spec:
       - name: tmp
         emptyDir: {}
 ---
+# v3のPodを1つデプロイ
 apiVersion: apps/v1
 kind: Deployment
 metadata:
