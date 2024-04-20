@@ -152,20 +152,23 @@ metadata:
   labels:
     account: reviews
 ---
-# v1のPodを1つデプロイ
 apiVersion: apps/v1
 kind: Deployment
+# Deploymentの情報
 metadata:
   name: reviews-v1
   labels:
     app: reviews
     version: v1
+# v1のPodを1つデプロイ
 spec:
   replicas: 1
   selector:
     matchLabels:
+      # app:reviewsかつversion:v1のラベルがついたPodを監視
       app: reviews
       version: v1
+  # Podの定義(app:reviewsとversion:v1のラベルがついている)
   template:
     metadata:
       labels:
