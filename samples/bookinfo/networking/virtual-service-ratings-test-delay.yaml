@@ -3,22 +3,27 @@ kind: VirtualService
 metadata:
   name: ratings
 spec:
+  # このVirtualServiceが適用される対象のホスト名
   hosts:
   - ratings
+  # HTTPトラフィックのルールを定義
   http:
   - match:
     - headers:
         end-user:
           exact: jason
     fault:
+      # 対象のリクエストの100%に7秒の固定遅延を注入
       delay:
         percentage:
           value: 100.0
         fixedDelay: 7s
+    # 遅延を注入した後のリクエストのルーティング先
     route:
     - destination:
         host: ratings
         subset: v1
+  # jason以外のユーザーには遅延を注入しない
   - route:
     - destination:
         host: ratings
